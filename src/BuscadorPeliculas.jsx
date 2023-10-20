@@ -1,34 +1,23 @@
 import { useState } from "react";
+import { fetchPeliculas } from "./services/apiPeliculas"
 
 export const BuscadorPeliculas = () => {
     
     const [busqueda, setBusqueda] = useState('')
     const [peliculas, setPeliculas] = useState([])
-    const urlBase = 'https://api.themoviedb.org/3/search/movie'
-    const API_KEY = '78a88ecba5628cf470a11e407204cd68'
+
 
     const handleInputChange = (e) => {
         setBusqueda(e.target.value)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => { 
         e.preventDefault()
-        fetchPeliculas()
+        const peliculas = await fetchPeliculas(busqueda)
+        setPeliculas(peliculas)
     }
 
-    const fetchPeliculas = async () => {
-        try {
-            const response = await fetch(`${urlBase}?query=${busqueda}&api_key=${API_KEY}`)
-            const data = await response.json()
-            if (data.results) {
-                setPeliculas(data.results);
-            } else {
-                setPeliculas([]);
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
+   
 
     return (
         <div className="container">
